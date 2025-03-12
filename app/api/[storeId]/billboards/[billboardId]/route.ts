@@ -1,117 +1,124 @@
 import prismadb from "@/lib/prismadb";
-import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { auth } from '@clerk/nextjs/server'
+import { NextResponse } from "next/server"
 
-export async function PATCH(
-    req:Request,
-    {params}:{params:{billboardId:string,storeId:string}}
-){
+export async function GET (
+    req: Request,
+    { params }: { params: Promise<{ billboardId: string }>}
+) {
     try {
+        const { billboardId } = await params;
+        if(!billboardId) {
+            return new NextResponse("Billboard id is required", { status: 400 });
+        }
 
-        const {userId} = await auth();
+        const billboard = await prismadb.billBoard.findUnique({
+            where: {
+                id: billboardId,
+            }
+        })
+
+        return NextResponse.json(billboard);
+    } catch (err) {
+        console.log('[BILLBOARD_GET]', err)
+        return new NextResponse('Internal error', { status: 500 })
+    }
+}
+
+export async function PATCH (
+    req: Request,
+    { params }: { params: Promise<{ storeId: string, billboardId: string }>}
+) {
+    try {
+        const { userId } = await auth();
         const body = await req.json();
-        const {label,imageUrl} = body;
-        if(!userId){
-            return new NextResponse("Unauthorized",{status:401});
-        }
-        if(!label){
-            return new NextResponse("Label is required",{status:400})
-        }
-        if(!imageUrl){
-            return new NextResponse("Image is required",{status:400})
-        }
-        if(!params.billboardId){
-            return new NextResponse("BillBoardId is required",{status:400})
+
+        const { storeId, billboardId } = await params;
+
+        const { label, imageUrl } = body;
+
+        if (!userId) {
+            return new NextResponse("Unauthenticated", { status: 401 })
         }
 
-        const storeByUserId = await prisma?.store.findFirst({
-            where:{
-                id:params.storeId,
+        if (!label) {
+            return new NextResponse("Label is required", { status: 400 });
+        }
+
+        // if (!imageUrl) {
+        //     return new NextResponse("Image URL is required", { status: 400 });
+        // }
+
+        if(!billboardId) {
+            return new NextResponse("Billboard id is required", { status: 400 });
+        }
+
+        const storeByUserId = await prismadb.store.findFirst({
+            where: {
+                id: storeId,
                 userId
             }
         })
 
-        if(!storeByUserId){
-            return new NextResponse("UnAuthorized Access to the Store",{status:401});
-        } 
+        if (!storeByUserId) {
+            return new NextResponse("Unauthorized", { status: 403 });
+        }
+
         const billboard = await prismadb.billBoard.updateMany({
-            where:{
-                id:params.billboardId,
-                
+            where: {
+                id: billboardId
             },
-            data:{
+            data: {
                 label,
                 imageUrl
             }
-        });
-        return NextResponse.json(billboard)
+        })
 
-    } catch (error) {
-        console.log('[BILLBOARD_PATCH] ',error);
-        return new NextResponse("Internal Error",{status:500})
+        return NextResponse.json(billboard);
+    } catch (err) {
+        console.log('[BILLBOARD_PATCH]', err)
+        return new NextResponse('Internal error', { status: 500 })
     }
 }
 
-export async function DELETE(
-    req:Request,
-    {params}:{params:{storeId:string,billboardId:string}}
-){
-    try {
+//// Delete Method
 
-        const {userId} = await auth();
-        if(!userId){
-            return new NextResponse("Unauthorized",{status:401});
+export async function DELETE (
+    req: Request,
+    { params }: { params: Promise<{ storeId: string, billboardId: string }>}
+) {
+    try {
+        const { userId } = await auth();
+        const { billboardId, storeId } = await params;
+
+        if (!userId) {
+            return new NextResponse("Unauthenticated", { status: 401 })
         }
-        if(!params.billboardId){
-            return new NextResponse("BillBoard is required",{status:400})
+
+        if(!billboardId) {
+            return new NextResponse("Billboard id is required", { status: 400 });
         }
-        const storeByUserId = await prisma?.store.findFirst({
-            where:{
-                id:params.storeId,
+
+        const storeByUserId = await prismadb.store.findFirst({
+            where: {
+                id: storeId,
                 userId
             }
         })
 
-        if(!storeByUserId){
-            return new NextResponse("UnAuthorized Access to the Store",{status:401});
-        } 
-        const billboard = await prismadb.billBoard.deleteMany({
-            where:{
-                id:params.billboardId,
-                
-            }
-   
-        });
-        return NextResponse.json(billboard)
-
-    } catch (error) {
-        console.log('[BILLBOARD_DELETE] ',error);
-        return new NextResponse("Internal Error",{status:500})
-    }
-}
-
-export async function GET(
-    req:Request,
-    {params}:{params:{billboardId:string}}
-){
-    try {
-
-        
-        if(!params.billboardId){
-            return new NextResponse("BillBoard is required",{status:400})
+        if (!storeByUserId) {
+            return new NextResponse("Unauthorized", { status: 403 });
         }
-         
-        const billboard = await prismadb.billBoard.findUnique({
-            where:{
-                id:params.billboardId,
-                
-            }
-   
-        });
-        return NextResponse.json(billboard)
 
-    } catch (error) {
-        console.log('[BILLBOARD_GET] ',error);
-        return new NextResponse("Internal Error",{status:500})
+        const billboard = await prismadb.billBoard.deleteMany({
+            where: {
+                id: billboardId,
+            }
+        })
+
+        return NextResponse.json(billboard);
+    } catch (err) {
+        console.log('[BILLBOARD_DELETE]', err)
+        return new NextResponse('Internal error', { status: 500 })
     }
 }

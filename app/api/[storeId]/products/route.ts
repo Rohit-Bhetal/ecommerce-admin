@@ -4,13 +4,13 @@ import { NextResponse } from "next/server";
 
 export async function POST(
     req:Request,
-    {params}:{params:{storeId:string}}
+    { params }: { params: Promise<{ storeId: string }> }
 ){
     try {
 
         const {userId} = await auth();
 
-        
+        const { storeId } = await params; 
         const body = await req.json();
         const {
             name,
@@ -47,13 +47,13 @@ export async function POST(
         if(!description){
             return new NextResponse("Description is Required",{status:401});
         }
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("StoreId is Required",{status:401});
         }
         
         const storeByUserId = await prisma?.store.findFirst({
             where:{
-                id:params.storeId,
+                id:storeId,
                 userId
             }
         })
@@ -79,7 +79,7 @@ export async function POST(
                 },
                 isArchived,
                 isFeatured,
-                storeId:params.storeId
+                storeId:storeId
             }
         });
         return NextResponse.json(product);
@@ -93,16 +93,17 @@ export async function POST(
 
 export async function GET(
     req:Request,
-    {params}:{params:{storeId:string}}
+    { params }: { params: Promise<{ storeId: string }> }
 ){
     try {
+        const { storeId } = await params; 
         const {searchParams} = new URL(req.url);
         const categoryId = searchParams.get("categoryId")||undefined;
         const colorId = searchParams.get("colorId")||undefined;
         const sizeId = searchParams.get("sizeId")||undefined;
         const isFeatured = searchParams.get("isFeatured");
         
-        if(!params.storeId){
+        if(!storeId){
             return new NextResponse("StoreId is Required",{status:401});
         }
         
@@ -111,7 +112,7 @@ export async function GET(
 
         const product = await prismadb.product.findMany({
             where:{
-                storeId:params.storeId,
+                storeId:storeId,
                 categoryId,
                 colorId,
                 sizeId,
