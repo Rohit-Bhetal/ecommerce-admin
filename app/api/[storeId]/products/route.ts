@@ -51,7 +51,7 @@ export async function POST(
             return new NextResponse("StoreId is Required",{status:401});
         }
         
-        const storeByUserId = await prisma?.store.findFirst({
+        const storeByUserId = await prismadb?.store.findFirst({
             where:{
                 id:storeId,
                 userId
