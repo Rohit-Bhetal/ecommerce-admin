@@ -40,7 +40,6 @@ export const BillBoardForm:React.FC<BillboardFormProps> = ({
 
     const params = useParams();
     const router = useRouter();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [open,setOpen] = useState(false);
     const [loading,setLoading] = useState(false);
 

@@ -5,9 +5,7 @@ import { SettingsForm } from "./components/settings-form";
 
 
 interface SettingsPageProps{
-    params:{
-        storeId:string;
-    }
+  params: Promise<{ storeId: string }> 
 }
 const SettingsPage:React.FC<SettingsPageProps> = async({
     params
