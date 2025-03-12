@@ -12,7 +12,7 @@ export async function GET (
             return new NextResponse("Billboard id is required", { status: 400 });
         }
 
-        const billboard = await prismadb.billBoard.findUnique({
+        const billboard = await prismadb.billboard.findUnique({
             where: {
                 id: billboardId,
             }
@@ -64,7 +64,7 @@ export async function PATCH (
             return new NextResponse("Unauthorized", { status: 403 });
         }
 
-        const billboard = await prismadb.billBoard.updateMany({
+        const billboard = await prismadb.billboard.updateMany({
             where: {
                 id: billboardId
             },
@@ -110,7 +110,7 @@ export async function DELETE (
             return new NextResponse("Unauthorized", { status: 403 });
         }
 
-        const billboard = await prismadb.billBoard.deleteMany({
+        const billboard = await prismadb.billboard.deleteMany({
             where: {
                 id: billboardId,
             }

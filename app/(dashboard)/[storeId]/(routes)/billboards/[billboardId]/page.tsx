@@ -3,7 +3,7 @@ import { BillBoardForm } from "./components/billboard-form";
 
 const BillboardPage= async ({ params }: { params: Promise<{ billboardId: string }> })=>{
     const { billboardId } = await params
-    const billboard = await prismadb.billBoard.findUnique({
+    const billboard = await prismadb.billboard.findUnique({
         where:{
             id:billboardId
         }

@@ -7,7 +7,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated/client"
+  //output   = "./generated/client"
 }
 
 datasource db {
@@ -20,7 +20,7 @@ model Store{
   id         String       @id @default(uuid())
   name       String
   userId     String
-  billboards BillBoard[]  @relation("StoreToBillboard")
+  billboards Billboard[]  @relation("StoreToBillboard")
   sizes      Size[]       @relation("StoreToSize")
   colors     Color[]      @relation("StoreToColor")
   products    Product[]    @relation("StoreToProduct")
@@ -30,7 +30,7 @@ model Store{
   updatedAt  DateTime     @updatedAt  
 }
 
-model BillBoard{
+model Billboard{
   id        String    @id @default(uuid())
   storeId   String
   store     Store     @relation("StoreToBillboard",fields: [storeId],references: [id])
@@ -48,7 +48,7 @@ model Category{
   storeId   String
   store     Store     @relation("StoreToCategory",fields: [storeId], references: [id])
   billboardId String
-  billboard   BillBoard @relation("BillboardToCategory", fields: [billboardId], references: [id])
+  billboard   Billboard @relation("BillboardToCategory", fields: [billboardId], references: [id])
   name      String
   products    Product[]    @relation("CategoryToProduct")
   createdAt DateTime  @default(now())

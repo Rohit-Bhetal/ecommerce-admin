@@ -9,7 +9,7 @@ const BillboardsPage = async({
     params: Promise<{ storeId: string }>
 })=>{
     const { storeId } = await params;
-    const billboards = await prismadb.billBoard.findMany({
+    const billboards = await prismadb.billboard.findMany({
         where:{
             storeId:storeId
         },

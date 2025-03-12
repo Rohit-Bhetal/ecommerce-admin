@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { BillBoard } from "@prisma/client";
+import { Billboard } from "@prisma/client";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -24,7 +24,7 @@ import * as z from 'zod';
 
 
 interface BillboardFormProps{
-    initialData:BillBoard|null
+    initialData:Billboard|null
 }
 
 const formSchema = z.object({

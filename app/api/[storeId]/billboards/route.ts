@@ -37,7 +37,7 @@ export async function POST(
             return new NextResponse("UnAuthorized Access to the Store",{status:401});
         }
 
-        const billboard = await prismadb.billBoard.create({
+        const billboard = await prismadb.billboard.create({
             data:{
                 label,
                 imageUrl,
@@ -68,7 +68,7 @@ export async function GET(
        
 
 
-        const billboards = await prismadb.billBoard.findMany({
+        const billboards = await prismadb.billboard.findMany({
             where:{
                 storeId:storeId
             }

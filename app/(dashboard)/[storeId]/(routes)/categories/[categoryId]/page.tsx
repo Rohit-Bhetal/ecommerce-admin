@@ -10,7 +10,7 @@ const CategoryPage= async({
             id:categoryId
         }
     });
-    const billboards = await prismadb.billBoard.findMany({
+    const billboards = await prismadb.billboard.findMany({
         where:{
             storeId:storeId
         }

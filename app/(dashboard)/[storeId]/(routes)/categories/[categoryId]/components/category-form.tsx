@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {  BillBoard, Category } from "@prisma/client";
+import {  Billboard, Category } from "@prisma/client";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -26,7 +26,7 @@ import * as z from 'zod';
 
 interface CategoryFormProps{
     initialData:Category|null;
-    billboards:BillBoard[];
+    billboards:Billboard[];
 }
 
 const formSchema = z.object({
