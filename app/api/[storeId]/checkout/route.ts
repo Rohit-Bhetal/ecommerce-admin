@@ -39,7 +39,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ storeId
                 product_data: {
                     name: product.name,
                 },
-                unit_amount: Number(product.price) * 100
+                unit_amount: Math.round(Number(product.price) * 100)
             }
         })
     })
